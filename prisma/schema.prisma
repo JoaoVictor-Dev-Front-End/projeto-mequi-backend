@@ -13,11 +13,32 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Cupons {
-  cupom_id       Int      @id @default(autoincrement())
+model cupons {
+  cupom_id       Int       @id @default(autoincrement())
   cupom_nome     String
   cupom_codigo   String
+  cupom_status   String    @default("ativo")
   cupom_validade DateTime
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime? @updatedAt
+}
+
+model categorias {
+  categoria_id       Int       @id @default(autoincrement())
+  categoria_nome     String
+  categoria_imagem   String
+  categoria_destaque Boolean
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime? @updatedAt
+  subcategorias      subcategorias[]
+}
+
+model subcategorias {
+  sub_id     Int       @id @default(autoincrement())
+  sub_nome   String
+  sub_imagem String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  categoria_id Int
+  categoria categorias @relation(fields: [categoria_id], references: [categoria_id])
 }

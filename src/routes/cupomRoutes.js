@@ -1,7 +1,14 @@
+const { listarTodosCupons, listarUmCupom } = require('../controllers/cupomController');
+
+
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-    res.send('Listar cupons')
+router.get('/', async (req, res) => {
+    res.send(await listarTodosCupons());
+})
+
+router.get('/:id', async (req, res) => {
+    res.send(await listarUmCupom(req.params.id));
 })
 
 router.post('/', (req, res) => {
