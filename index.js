@@ -3,6 +3,8 @@ const app = express();
 
 const cupomRoutes = require('./src/routes/cupomRoutes')
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
     res.send('hello world');
 })

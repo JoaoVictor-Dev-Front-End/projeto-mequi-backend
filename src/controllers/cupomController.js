@@ -11,14 +11,51 @@ async function listarUmCupom(id){
         }
     })
 }
-async function criarUmCupom(){
-
+async function criarUmCupom(dados){
+    try {
+        return await prisma.cupons.create({
+            data: dados
+        })
+    } catch (error) {
+        return {
+            severity: 'error',
+            detail: error.message
+        }
+    }
 }
-async function editarUmCupom(){
-
+async function editarUmCupom(dados, id){
+    try {
+        return await prisma.cupons.update({
+            data: dados,
+            where: {
+                cupom_id: Number(id)
+            }
+        })
+    } catch (error) {
+        return {
+            severity: 'error',
+            detail: error.message
+        }
+    }
 }
-async function deletarUmCupom(){
-
+async function deletarUmCupom(id){
+    try {
+        return await prisma.cupons.delete({
+            where: {
+                cupom_id: Number(id)
+            }
+        }).then(() => {
+            return {
+                severity: 'success',
+                detail: 'Dados deletados com sucesso'
+            }
+        })
+    } catch (error) {
+        return {
+            severity: 'error',
+            detail: error.message
+        }
+    }
 }
 
 module.exports = {
