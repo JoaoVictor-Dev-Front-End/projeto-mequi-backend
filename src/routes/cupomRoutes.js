@@ -1,6 +1,4 @@
 const { listarTodosCupons, listarUmCupom, criarUmCupom, editarUmCupom, deletarUmCupom } = require('../controllers/cupomController');
-
-
 const router = require('express').Router();
 
 router.get('/', async (req, res) => {
