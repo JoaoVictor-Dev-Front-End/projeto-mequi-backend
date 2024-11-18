@@ -1,7 +1,8 @@
 const { PrismaClient } = require("@prisma/client");
-const bcrypt = require('bcrypt');
-
 const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
 async function listarTodosUsuarios(){
     try {
@@ -54,9 +55,45 @@ async function criarUsuario(dados) {
     }
 }
 
+async function login(dados){
+    try {
+        const usuario = await prisma.usuarios.findFirst({
+            where: {
+                usuario_email: dados.usuario_email
+            }
+        })
+        if(usuario){
+            return await bcrypt.compare(dados.usuario_senha, usuario.usuario_senha).then(result => {
+                if(result){
+                    const token = jwt.sign({email: dados.usuario_email}, process.env.SEGREDO, { expiresIn: '1h'})
+                    return {
+                        severity: 'success',
+                        detail: 'Usuário logado com sucesso!',
+                        token
+                    }
+                }
+                return {
+                    severity: 'warn',
+                    detail: 'Email ou senha incorreto'
+                }
+            });
+        }
+        return {
+            severity: 'warn',
+            detail: 'Email ou senha incorreto'
+        }
+    } catch (error) {
+        return {
+            severity: 'error',
+            detail: error.message
+        }
+    }
+}
+
 
 module.exports = {
     listarTodosUsuarios,
     listarUmUsuario,
-    criarUsuario
+    criarUsuario,
+    login
 }

@@ -1,8 +1,9 @@
-const { listarTodosUsuarios, listarUmUsuario, criarUsuario } = require('../controllers/usuarioController');
+const { listarTodosUsuarios, listarUmUsuario, criarUsuario, login } = require('../controllers/usuarioController');
+const { verificarToken } = require('../utils');
 
 const router = require('express').Router();
 
-router.get('/', async (req, res) => {
+router.get('/', verificarToken, async (req, res) => {
     res.send(await listarTodosUsuarios());
 })
 
@@ -12,6 +13,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     res.send(await criarUsuario(req.body))
+})
+
+router.post('/login', async (req, res) => {
+    res.send(await login(req.body))
 })
 
 module.exports = router;
